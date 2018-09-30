@@ -5,31 +5,22 @@ using UnityEngine.UI;
 using UniRx;
 
 public class UnityMainActivity : MonoBehaviour {
-    const string PACKAGE_NAME_CONTROLLER = "jchan1001.co.jp.unityplugin.Controller";
-    #if !UNITY_EDITOR && UNITY_ANDROID
-        private static AndroidJavaObject activityContext = null;
-    #endif
+#if !UNITY_EDITOR && UNITY_ANDROID
+    const string CLASS_CONTROLLER = "jchan1001.co.jp.unityplugin.Controller.UnityMainActivity";
+    private static AndroidJavaObject activityContext = null;
 
     [SerializeField]
     Button mMoveNextActivityButton;
 
-	// Use this for initialization
-	void Start () {
-#if !UNITY_EDITOR && UNITY_ANDROID
+    // Use this for initialization
+    void Start() {
         using (AndroidJavaClass activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
             activityContext = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
         }
-#endif
 
         mMoveNextActivityButton.OnClickAsObservable().Subscribe(_ => {
-#if !UNITY_EDITOR && UNITY_ANDROID
-            GetAndroidClass(PACKAGE_NAME_CONTROLLER);
-#endif
+            AndroidLog("d", "Unity Log", "Hi There");
         });
-    }
-
-    void MoveActivity(string activityName) {
-
     }
 
     AndroidJavaClass GetAndroidClass(string package) {
@@ -42,4 +33,9 @@ public class UnityMainActivity : MonoBehaviour {
         }
         return null;
     }
+
+    void AndroidLog(string type, string tag, string msg) {
+        GetAndroidClass(CLASS_CONTROLLER).Call("Log", type, tag, msg);
+    }
+#endif
 }
