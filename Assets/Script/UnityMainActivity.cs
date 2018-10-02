@@ -1,41 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 
 public class UnityMainActivity : MonoBehaviour {
-#if !UNITY_EDITOR && UNITY_ANDROID
-    const string CLASS_CONTROLLER = "jchan1001.co.jp.unityplugin.Controller.UnityMainActivity";
-    private static AndroidJavaObject activityContext = null;
-
     [SerializeField]
     Button mMoveNextActivityButton;
 
-    // Use this for initialization
+    const string CLASS_CONTROLLER = "jchan1001.co.jp.unityplugin.Controller.UnityController";
+    private static AndroidJavaObject activityContext = null;
+
     void Start() {
-        using (AndroidJavaClass activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
-            activityContext = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-        }
-
+#if !UNITY_EDITOR && UNITY_ANDROID
         mMoveNextActivityButton.OnClickAsObservable().Subscribe(_ => {
-            AndroidLog("d", "Unity Log", "Hi There");
+            AndroidLog("d", "Unity Log", "Log from unity");
         });
-    }
-
-    AndroidJavaClass GetAndroidClass(string package) {
-        using (AndroidJavaClass ajc = new AndroidJavaClass(package))
-        {
-            if (ajc != null)
-            {
-                return ajc;
-            }
-        }
-        return null;
+#endif
     }
 
     void AndroidLog(string type, string tag, string msg) {
-        GetAndroidClass(CLASS_CONTROLLER).Call("Log", type, tag, msg);
-    }
+#if !UNITY_EDITOR && UNITY_ANDROID
+        using (AndroidJavaClass ajc = new AndroidJavaClass(CLASS_CONTROLLER))
+        {
+            if (ajc != null)
+            {
+                ajc.CallStatic("Log", type, tag, msg);
+            }
+        }
 #endif
+    }
 }
