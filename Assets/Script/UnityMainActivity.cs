@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
-
-// AndroidJavaObject -> Java class
+using System.Collections;
 
 public class UnityMainActivity : MonoBehaviour
 {
@@ -37,16 +36,23 @@ public class UnityMainActivity : MonoBehaviour
             // Static method call
             mUnityController.CallStatic("log", AndroidUtils.LOG_TYPE_DEBUG, "Log from unity");
 
-            mUnityController.Call("setTestInt", 10);
-            mUnityController.Call("setTestString", "stringTest");
-            string[] testArr = new string[3];
-            testArr[0] = "0";
-            testArr[1] = "1";
-            testArr[2] = "2";
-            // Todo Edd send error
-            mUnityController.Call("setTestStringArr", (object) testArr);
+            // none static method call
+            mUnityController.Call("setInt", 10);
+            mUnityController.Call("setString", "stringTest");
 
-            mUnityController.Call("moveActivity", mActivityContext);
+            string[] testArr = new string[3];
+            testArr[0] = "one";
+            testArr[1] = "two";
+            testArr[2] = "three";
+            mUnityController.Call("setStringArr", (object) testArr);
+
+            // Get intent object
+            AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent");
+            ArrayList intList = new ArrayList();
+            // set intent
+            intentObject.Call<AndroidJavaObject>("putExtra", "testok", 1);
+
+            mUnityController.Call("moveActivity", mActivityContext, intentObject);
         }).AddTo(mDisposable);
 //#endif
     }
