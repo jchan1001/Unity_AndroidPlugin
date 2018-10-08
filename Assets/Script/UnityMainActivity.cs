@@ -56,7 +56,6 @@ public class UnityMainActivity : MonoBehaviour
 
             Texture2D file = Resources.Load(FILE_PATH) as Texture2D;
             byte[] imageData = file.EncodeToPNG();
-            mUnityController.CallStatic("log", AndroidUtils.LOG_TYPE_ERROR, "LimageData : " + imageData);
             mUnityController.Call("setImageData", imageData);
 
             mUnityController.Call("moveActivity", mActivityContext, intentObject);
@@ -67,5 +66,15 @@ public class UnityMainActivity : MonoBehaviour
     private void OnDestroy()
     {
         mDisposable.Dispose();
+    }
+
+    // true > background
+    // false > foreground
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (mUnityController != null)
+        {
+            mUnityController.CallStatic("log", AndroidUtils.LOG_TYPE_DEBUG, "pauseStatus : " + pauseStatus);
+        }
     }
 }
