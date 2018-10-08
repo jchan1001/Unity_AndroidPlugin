@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UniRx;
 using System.Collections;
+using System.IO;
 
 public class UnityMainActivity : MonoBehaviour
 {
@@ -10,12 +11,13 @@ public class UnityMainActivity : MonoBehaviour
 
     private static AndroidJavaObject mActivityContext = null;
     const string CLASS_CONTROLLER = "jchan1001.co.jp.unityplugin.Controller.UnityController";
+    const string FILE_PATH = "Profile";
     private static AndroidJavaObject mUnityController = null;
     CompositeDisposable mDisposable = new CompositeDisposable();
 
     void Start()
     {
-//#if !UNITY_EDITOR && UNITY_ANDROID
+        //#if !UNITY_EDITOR && UNITY_ANDROID
         // Set Unity Controller
         using (AndroidJavaClass ajc = new AndroidJavaClass(CLASS_CONTROLLER))
         {
@@ -50,7 +52,12 @@ public class UnityMainActivity : MonoBehaviour
             AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent");
             ArrayList intList = new ArrayList();
             // set intent
-            intentObject.Call<AndroidJavaObject>("putExtra", "testok", 1);
+            intentObject.Call<AndroidJavaObject>("putExtra", "testok", 100);
+
+            Texture2D file = Resources.Load(FILE_PATH) as Texture2D;
+            byte[] imageData = file.EncodeToPNG();
+            mUnityController.CallStatic("log", AndroidUtils.LOG_TYPE_ERROR, "LimageData : " + imageData);
+            mUnityController.Call("setImageData", imageData);
 
             mUnityController.Call("moveActivity", mActivityContext, intentObject);
         }).AddTo(mDisposable);
