@@ -68,6 +68,18 @@ public class UnityMainActivity : MonoBehaviour
         mDisposable.Dispose();
     }
 
+    // CallFromAndroid
+    void ChangeButtonColorRed(string str)
+    {
+        mMoveNextActivityButton.GetComponent<Image>().color = Color.red;
+    }
+
+    // CallFromAndroid
+    void ChangeButtonColorGreen(string str)
+    {
+        mMoveNextActivityButton.GetComponent<Image>().color = Color.green;
+    }
+
     // true > background
     // false > foreground
     void OnApplicationPause(bool pauseStatus)
