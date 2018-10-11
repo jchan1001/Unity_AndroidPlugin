@@ -60,7 +60,12 @@ public class UnityMainActivity : MonoBehaviour
 
             mUnityController.Call("moveActivity", mActivityContext, intentObject);
         }).AddTo(mDisposable);
-//#endif
+
+        PlayerPrefs.SetInt("Price", 10000);
+        PlayerPrefs.Save();
+        int price = PlayerPrefs.GetInt("Price");
+        mUnityController.CallStatic("log", AndroidUtils.LOG_TYPE_DEBUG, "Log from unity PlayerPrefs Value : " + price);
+        //#endif
     }
 
     private void OnDestroy()
