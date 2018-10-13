@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
-using System.Collections;
-using System.IO;
 
 public class UnityMainActivity : MonoBehaviour
 {
@@ -50,7 +48,6 @@ public class UnityMainActivity : MonoBehaviour
 
             // Get intent object
             AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent");
-            ArrayList intList = new ArrayList();
             // set intent
             intentObject.Call<AndroidJavaObject>("putExtra", "testok", 100);
 
